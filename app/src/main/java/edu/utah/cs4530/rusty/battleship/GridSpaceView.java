@@ -18,6 +18,16 @@ public class GridSpaceView extends View {
         super(context);
     }
 
+    public interface OnMissileFiredListener {
+        void onMissileFired(GridSpaceView gridSpaceView);
+    }
+
+    OnMissileFiredListener _onMissileFiredListener = null;
+
+    public void setOnMissileFiredListener(OnMissileFiredListener listener) {
+        _onMissileFiredListener = listener;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -48,7 +58,8 @@ public class GridSpaceView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        setColor(Color.RED);
+//        setColor(Color.RED);
+        _onMissileFiredListener.onMissileFired(this);
         return true;
     }
 }

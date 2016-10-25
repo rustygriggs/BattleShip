@@ -1,15 +1,15 @@
 package edu.utah.cs4530.rusty.battleship;
 
 import android.content.Context;
-import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
  * Created by Rusty on 10/24/2016.
  */
-public class GridLayoutCustom extends ViewGroup {
+public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnMissileFiredListener{
     /**
      * _gridSize should represent the number of columns and rows.
      * These should always be the same.
@@ -25,20 +25,26 @@ public class GridLayoutCustom extends ViewGroup {
         int childCount = getChildCount();
         _gridSize = (int) Math.sqrt((double) childCount);
 
-        //TODO: figure out child height and width based on view dimensions
         int childWidth = getWidth() / _gridSize;
         int childHeight  = getHeight() / _gridSize;
 
         for (int childIndex = 0; childIndex < childCount; childIndex++) {
 
             Rect childRect = new Rect();
-            childRect.left = (childIndex % 10) * childWidth;
+            childRect.left = (childIndex % _gridSize) * childWidth;
             childRect.right = childRect.left + childWidth;
-            childRect.top = (childIndex / 10) * childHeight;
+            childRect.top = (childIndex / _gridSize) * childHeight;
             childRect.bottom = childRect.top + childHeight;
 
-            View childView = getChildAt(childIndex);
+            GridSpaceView childView = (GridSpaceView) getChildAt(childIndex);
+            childView.setOnMissileFiredListener(this);
             childView.layout(childRect.left, childRect.top, childRect.right, childRect.bottom);
         }
+    }
+
+    @Override
+    public void onMissileFired(GridSpaceView gridSpaceView) {
+        //TODO: what to do when missile if fired
+        Log.i("Missile", "Missile fired and onMissileFiredListener is functioning properly");
     }
 }

@@ -69,7 +69,7 @@ public class GameObjectList extends Object implements Serializable {
      * update (play) method. Might need more parameters
      * @param gameIndex
      */
-    void updateGame(int gameIndex) {
+    void updateGame(int gameIndex, int missileIndex) {
 
     }
 
