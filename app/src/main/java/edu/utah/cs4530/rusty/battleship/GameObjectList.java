@@ -1,5 +1,7 @@
 package edu.utah.cs4530.rusty.battleship;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class GameObjectList extends Object implements Serializable {
     //Singleton class
     private static GameObjectList _instance;
+
 
     /**
      * Used to get the one instance of this class.
@@ -35,6 +38,7 @@ public class GameObjectList extends Object implements Serializable {
 
     List<GameObject> _gameList = new ArrayList<>();
 
+
     int getGameObjectsCount() {
         return _gameList.size();
     }
@@ -49,6 +53,7 @@ public class GameObjectList extends Object implements Serializable {
      */
     void createNewGame() {
         _gameList.add(new GameObject());
+        Log.i("createGame", "Created New Game");
     }
 
     /**
