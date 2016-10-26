@@ -25,7 +25,6 @@ public class GameListFragment extends Fragment implements ListAdapter {
 //        return fragment;
 
 //
-        GameObjectList.getInstance().createNewGame();
         return new GameListFragment();
     }
 

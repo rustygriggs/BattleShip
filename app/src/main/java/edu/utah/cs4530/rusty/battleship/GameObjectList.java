@@ -16,10 +16,6 @@ public class GameObjectList extends Object implements Serializable {
     //Singleton class
     private static GameObjectList _instance;
 
-    public interface OnGameUpdatedListener {
-        void onGameUpdated(int gridSpaceColor);
-    }
-
     /**
      * Used to get the one instance of this class.
      * @return the single instance of Gallery that has been instantiated.
@@ -41,13 +37,9 @@ public class GameObjectList extends Object implements Serializable {
 
     List<GameObject> _gameList = new ArrayList<>();
 
-
     int getGameObjectsCount() {
         return _gameList.size();
     }
-
-
-
 
     //These following methods are apparently needed for the user to control the data model
 
@@ -72,8 +64,15 @@ public class GameObjectList extends Object implements Serializable {
      * update (play) method. Might need more parameters
      * @param gameIndex
      */
-    void updateGame(int gameIndex, int missileIndex) {
-        _gameList.get(gameIndex).player1LaunchesMissile(missileIndex);
+    int updateGame(int gameIndex, int missileIndex) {
+        int hitCode;
+        if (_gameList.get(gameIndex)._currentPlayer == 1) {
+            hitCode = _gameList.get(gameIndex).player1LaunchesMissile(missileIndex);
+        }
+        else {
+            hitCode = _gameList.get(gameIndex).player2LaunchesMissile(missileIndex);
+        }
+        return hitCode;
     }
 
     /**
@@ -81,8 +80,8 @@ public class GameObjectList extends Object implements Serializable {
      * @param gameIndex
      */
     void deleteGame(int gameIndex) {
-
+        if (_gameList.contains(_gameList.get(gameIndex))) {
+            _gameList.remove(gameIndex);
+        }
     }
-
-
 }

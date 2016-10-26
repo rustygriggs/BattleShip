@@ -8,14 +8,22 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Set;
+
 /**
  * Created by Rusty on 10/24/2016.
  */
 public class GridSpaceView extends View {
-    int _gridSpaceColor = Color.GRAY;
+    int _gridSpaceColor = Color.BLUE;
+    int _gridIndex;
 
     public GridSpaceView(Context context) {
         super(context);
+    }
+
+    public GridSpaceView(Context context, int gridIndex) {
+        super(context);
+        _gridIndex = gridIndex;
     }
 
     public interface OnGridSpaceTouchedListener {
@@ -58,7 +66,11 @@ public class GridSpaceView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        _onGridSpaceTouchedListener.onGridSpaceTouched(this);
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            _onGridSpaceTouchedListener.onGridSpaceTouched(this);
+        }
         return true;
     }
+
+
 }

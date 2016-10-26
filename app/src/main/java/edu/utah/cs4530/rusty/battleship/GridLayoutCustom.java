@@ -1,10 +1,12 @@
 package edu.utah.cs4530.rusty.battleship;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Set;
 
 /**
  * Created by Rusty on 10/24/2016.
@@ -46,27 +48,27 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnGridS
             childRect.top = (childIndex / _gridSize) * childHeight;
             childRect.bottom = childRect.top + childHeight;
 
-            GridSpaceView childView = (GridSpaceView) getChildAt(childIndex);
+            GridSpaceView childView = new GridSpaceView(getContext(), childIndex);
+            childView = (GridSpaceView) getChildAt(childIndex);
             childView.setOnGridSpaceTouchedListener(this);
+            childView.setId(childIndex);
             childView.layout(childRect.left, childRect.top, childRect.right, childRect.bottom);
         }
     }
 
     @Override
     public void onGridSpaceTouched(GridSpaceView gridSpaceView) {
-        //TODO: what to do when missile if fired, send another listener up the chain
-        Log.i("Missile", "Missile fired and onGridSpaceTouchedListener is functioning properly");
-        int index = calculateGridSpaceIndex();
-        _onMissileFiredListener.onMissileFired(index);
+        _onMissileFiredListener.onMissileFired(gridSpaceView.getId());
     }
 
-    private int calculateGridSpaceIndex() {
-        return 0;
-        //TODO: do this method
+
+    public void setGridSpaceColor(Set<Integer> allShips) {
+        for (Integer ship : allShips) {
+            GridSpaceView childView = (GridSpaceView) getChildAt(ship);
+            childView.setColor(Color.GRAY);
+        }
     }
 
-    public void setGridSpaceColor(int index, int color) {
-        GridSpaceView childView = (GridSpaceView) getChildAt(index);
-        childView.setColor(color);
-    }
+
+
 }
