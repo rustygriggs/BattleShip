@@ -18,14 +18,14 @@ public class GridSpaceView extends View {
         super(context);
     }
 
-    public interface OnMissileFiredListener {
-        void onMissileFired(GridSpaceView gridSpaceView);
+    public interface OnGridSpaceTouchedListener {
+        void onGridSpaceTouched(GridSpaceView gridSpaceView);
     }
 
-    OnMissileFiredListener _onMissileFiredListener = null;
+    OnGridSpaceTouchedListener _onGridSpaceTouchedListener = null;
 
-    public void setOnMissileFiredListener(OnMissileFiredListener listener) {
-        _onMissileFiredListener = listener;
+    public void setOnGridSpaceTouchedListener(OnGridSpaceTouchedListener listener) {
+        _onGridSpaceTouchedListener = listener;
     }
 
     @Override
@@ -58,8 +58,7 @@ public class GridSpaceView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        setColor(Color.RED);
-        _onMissileFiredListener.onMissileFired(this);
+        _onGridSpaceTouchedListener.onGridSpaceTouched(this);
         return true;
     }
 }

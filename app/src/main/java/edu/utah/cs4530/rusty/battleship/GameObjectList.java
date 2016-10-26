@@ -16,6 +16,9 @@ public class GameObjectList extends Object implements Serializable {
     //Singleton class
     private static GameObjectList _instance;
 
+    public interface OnGameUpdatedListener {
+        void onGameUpdated(int gridSpaceColor);
+    }
 
     /**
      * Used to get the one instance of this class.
@@ -70,7 +73,7 @@ public class GameObjectList extends Object implements Serializable {
      * @param gameIndex
      */
     void updateGame(int gameIndex, int missileIndex) {
-
+        _gameList.get(gameIndex).player1LaunchesMissile(missileIndex);
     }
 
     /**

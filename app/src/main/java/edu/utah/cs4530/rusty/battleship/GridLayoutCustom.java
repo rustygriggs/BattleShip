@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * Created by Rusty on 10/24/2016.
  */
-public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnMissileFiredListener{
+public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnGridSpaceTouchedListener {
     /**
      * _gridSize should represent the number of columns and rows.
      * These should always be the same.
@@ -18,6 +18,16 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnMissi
 
     public GridLayoutCustom(Context context) {
         super(context);
+    }
+
+    public interface OnMissileFiredListener {
+        void onMissileFired(int index);
+    }
+
+    OnMissileFiredListener _onMissileFiredListener = null;
+
+    public void setOnMissileFiredListener(OnMissileFiredListener listener) {
+        _onMissileFiredListener = listener;
     }
 
     @Override
@@ -37,14 +47,26 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnMissi
             childRect.bottom = childRect.top + childHeight;
 
             GridSpaceView childView = (GridSpaceView) getChildAt(childIndex);
-            childView.setOnMissileFiredListener(this);
+            childView.setOnGridSpaceTouchedListener(this);
             childView.layout(childRect.left, childRect.top, childRect.right, childRect.bottom);
         }
     }
 
     @Override
-    public void onMissileFired(GridSpaceView gridSpaceView) {
-        //TODO: what to do when missile if fired
-        Log.i("Missile", "Missile fired and onMissileFiredListener is functioning properly");
+    public void onGridSpaceTouched(GridSpaceView gridSpaceView) {
+        //TODO: what to do when missile if fired, send another listener up the chain
+        Log.i("Missile", "Missile fired and onGridSpaceTouchedListener is functioning properly");
+        int index = calculateGridSpaceIndex();
+        _onMissileFiredListener.onMissileFired(index);
+    }
+
+    private int calculateGridSpaceIndex() {
+        return 0;
+        //TODO: do this method
+    }
+
+    public void setGridSpaceColor(int index, int color) {
+        GridSpaceView childView = (GridSpaceView) getChildAt(index);
+        childView.setColor(color);
     }
 }
