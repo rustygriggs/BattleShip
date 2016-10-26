@@ -1,7 +1,11 @@
 package edu.utah.cs4530.rusty.battleship;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,15 +24,6 @@ public class GameObject implements Serializable {
     public static final int DISALLOW = -1;
     public static final int SHIP_LOCATION = 2;
 
-    OnGameUpdatedListener _gameUpdatedListener = null;
-
-    public interface OnGameUpdatedListener {
-        void onGameUpdated(int hitCode, int missileIndex, Set<Integer> allShips);
-    }
-
-    public void setOnGameUpdatedListener(OnGameUpdatedListener listener) {
-        _gameUpdatedListener = listener;
-    }
 
     Set<Integer> allShips = new HashSet<>();
 
@@ -37,6 +32,9 @@ public class GameObject implements Serializable {
 
     Set<Integer> _player1Guesses = new HashSet<>();
     Set<Integer> _player2Guesses = new HashSet<>();
+
+    Map<Integer, Integer> _player1State;
+    Map<Integer, Integer> _player2State;
 
     int _currentPlayer = 1;
 
@@ -68,6 +66,13 @@ public class GameObject implements Serializable {
             }
             allShips.clear();
         }
+        //sets the state to be neutral - no misses or hits.
+        _player1State = new HashMap<>();
+        _player2State = new HashMap<>();
+        for (int i = 0; i < 100; i++) {
+            _player1State.put(i, 3);
+            _player2State.put(i, 3);
+        }
     }
 
     private void placeShip(int player, int shipSize, String shipType) {
@@ -94,7 +99,6 @@ public class GameObject implements Serializable {
                 allShips.add(currentShipPos);
                 currentShipPos = currentShipPos - 1;
             }
-//            _gameUpdatedListener.onGameUpdated(SHIP_LOCATION, currentShipPos, allShips);
         }
         //TODO: decide if I really need this. I don't think I do (I'm using allShips instead)
         switch (shipType) {
@@ -177,14 +181,15 @@ public class GameObject implements Serializable {
             _player1Guesses.add(index);
             _currentPlayer = 2;
             hitCode = HIT;
+            _player1State.put(index, 1);
         }
         else {
             //MISS! return white color
             _player1Guesses.add(index);
             _currentPlayer = 2;
             hitCode = MISS;
+            _player1State.put(index, 0);
         }
-        _gameUpdatedListener.onGameUpdated(hitCode, index, allShips);
         return hitCode;
     }
 
@@ -199,14 +204,15 @@ public class GameObject implements Serializable {
             _player2Guesses.add(index);
             _currentPlayer = 1;
             hitCode = HIT;
+            _player2State.put(index, 1);
         }
         else {
             //MISS! return white color
             _player2Guesses.add(index);
             _currentPlayer = 1;
             hitCode = MISS;
+            _player2State.put(index, 0);
         }
-        _gameUpdatedListener.onGameUpdated(hitCode, index, allShips);
         return hitCode;
     }
 }
