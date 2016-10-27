@@ -68,6 +68,9 @@ public class GameObjectList extends Object implements Serializable {
         int hitCode;
         if (_gameList.get(gameIndex)._currentPlayer == 1) {
             hitCode = _gameList.get(gameIndex).player1LaunchesMissile(missileIndex);
+            if (_gameList.get(gameIndex)._player1Wins) {
+
+            }
         }
         else {
             hitCode = _gameList.get(gameIndex).player2LaunchesMissile(missileIndex);

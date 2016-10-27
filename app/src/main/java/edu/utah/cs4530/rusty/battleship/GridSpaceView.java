@@ -66,7 +66,7 @@ public class GridSpaceView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
             _onGridSpaceTouchedListener.onGridSpaceTouched(this);
         }
         return true;
