@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,49 +20,89 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Rusty on 10/24/2016.
  */
-public class OpponentGridFragment extends Fragment implements GridLayoutCustom.OnMissileFiredListener {
+public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissileFiredListener {
     public static String GAME_OBJECT_LIST_FILENAME = "game_object_list.dat";
-    List<GridSpaceView> _gridSpaces = new ArrayList<>();
+    List<GridSpaceView> _gridSpacesPlayer1 = new ArrayList<>();
+    List<GridSpaceView> _gridSpacesPlayer2 = new ArrayList<>();
     private int _currentGameIndex = 0;
-    GridLayoutCustom _gridLayout;
+    GridLayoutCustom _ownGrid;
+    GridLayoutCustom _opponentGrid;
 
 
 
-    public static OpponentGridFragment newInstance() {
+    public static GridsFragment newInstance() {
         //this stuff was included when I just tabbed to write newInstance()
 //        Bundle args = new Bundle();
 //
 //        GalleryFragment fragment = new GalleryFragment();
 //        fragment.setArguments(args);
 //        return fragment;
-        return new OpponentGridFragment();
+        return new GridsFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        _gridLayout = new GridLayoutCustom(getActivity());
+        LinearLayout rootLayout = new LinearLayout(getActivity());
+        rootLayout.setOrientation(LinearLayout.VERTICAL);
+
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        View leftSideView = new View(getActivity());
+        leftSideView.setBackgroundColor(Color.BLACK);
+
+        linearLayout.addView(leftSideView, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+
+        _ownGrid = new GridLayoutCustom(getActivity());
+        _ownGrid.setEnabled(false);
         for (int i = 0; i < 100; i++) {
             GridSpaceView gridSpaceView = new GridSpaceView(getActivity());
-            _gridSpaces.add(gridSpaceView);
-            _gridLayout.addView(gridSpaceView);
+            gridSpaceView.setEnabled(false);
+            _gridSpacesPlayer1.add(gridSpaceView);
+            _ownGrid.addView(gridSpaceView);
         }
-        _gridLayout.setOnMissileFiredListener(this);
-        return _gridLayout;
+        _ownGrid.setOnMissileFiredListener(this);
+
+        linearLayout.addView(_ownGrid, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 3));
+
+        View rightSideView = new View(getActivity());
+        rightSideView.setBackgroundColor(Color.BLACK);
+
+        linearLayout.addView(rightSideView, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+
+
+        //opponent Grid starts
+        _opponentGrid = new GridLayoutCustom(getActivity());
+        for (int i = 0; i < 100; i++) {
+            GridSpaceView gridSpaceView = new GridSpaceView(getActivity());
+            _gridSpacesPlayer2.add(gridSpaceView);
+            _opponentGrid.addView(gridSpaceView);
+        }
+        _opponentGrid.setOnMissileFiredListener(this);
+
+        rootLayout.addView(linearLayout, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+
+        rootLayout.addView(_opponentGrid, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+
+        return rootLayout;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GameObjectList.setInstance(loadFromFile(GAME_OBJECT_LIST_FILENAME));
-        if (GameObjectList.getInstance().getGameObjectsCount() == 0) {
+//        GameObjectList.setInstance(loadFromFile(GAME_OBJECT_LIST_FILENAME));
+//        if (GameObjectList.getInstance().getGameObjectsCount() == 0) {
             GameObjectList.getInstance().createNewGame();
-        }
+       // }
 
     }
 
@@ -129,26 +170,52 @@ public class OpponentGridFragment extends Fragment implements GridLayoutCustom.O
                 if (GameObjectList.getInstance().readGame(_currentGameIndex)._currentPlayer == 1) {
                     for (Integer hitMissIndex : player1State.keySet()) {
                         if (player1State.get(hitMissIndex) == 0) {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.WHITE);
-                            _gridSpaces.get(hitMissIndex).setEnabled(false);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
                         } else if (player1State.get(hitMissIndex) == 1) {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.RED);
-                            _gridSpaces.get(hitMissIndex).setEnabled(false);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
                         } else {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.BLUE);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
                         }
                     }
+                    for (Integer hitMissIndex : player2State.keySet()) {
+                        if (player2State.get(hitMissIndex) == 0) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+                        } else if (player2State.get(hitMissIndex) == 1) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
+                        }
+                        else if (player2State.get(hitMissIndex) == 2) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
+                        }
+                        else {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+                        }
+                    }
+
                 } else {
                     for (Integer hitMissIndex : player2State.keySet()) {
                         if (player2State.get(hitMissIndex) == 0) {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.WHITE);
-                            _gridSpaces.get(hitMissIndex).setEnabled(false);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
 
                         } else if (player2State.get(hitMissIndex) == 1) {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.RED);
-                            _gridSpaces.get(hitMissIndex).setEnabled(false);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
+
                         } else {
-                            _gridSpaces.get(hitMissIndex).setColor(Color.BLUE);
+                            _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+
+                        }
+                    }
+                    for (Integer hitMissIndex : player1State.keySet()) {
+                        if (player1State.get(hitMissIndex) == 0) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+
+                        } else if (player1State.get(hitMissIndex) == 1) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
+                        }
+                        else if (player1State.get(hitMissIndex) == 2) {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
+                        }
+                        else {
+                            _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
                         }
                     }
                 }

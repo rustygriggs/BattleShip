@@ -61,6 +61,10 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnGridS
         _onMissileFiredListener.onMissileFired(gridSpaceView.getId());
     }
 
+    public void setSpaceColor (int space, int color) {
+        GridSpaceView gsv = (GridSpaceView) getChildAt(space);
+        gsv.setColor(color);
+    }
 
     public void setGridSpaceColor(Set<Integer> allShips) {
         for (Integer ship : allShips) {
