@@ -115,7 +115,6 @@ public class GameListFragment extends Fragment implements ListAdapter, View.OnCl
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        //This is the biggest one - most important
         //TODO: write this method to show information
         TextView textView = new TextView(getActivity());
         String gameNumber = "Game " + (i + 1);

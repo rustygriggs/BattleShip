@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements GameListFragment.
         _gameListFragment = (GameListFragment)
                 getSupportFragmentManager().findFragmentByTag(GAME_LIST_FRAGMENT_TAG);
 
-
         if (_gridsFragment == null) {
             _gridsFragment = GridsFragment.newInstance();
             _gameListFragment = GameListFragment.newInstance();
@@ -63,15 +62,11 @@ public class MainActivity extends AppCompatActivity implements GameListFragment.
 
     @Override
     public void onGameChosen(int gameId) {
-        Log.i("Game selected", "" + gameId);
-
         _gridsFragment.setCurrentGame(gameId);
     }
 
     @Override
     public void onNewGame() {
-        Log.i("New Game", "New Game ");
-
         _gridsFragment.addNewGame();
     }
 }

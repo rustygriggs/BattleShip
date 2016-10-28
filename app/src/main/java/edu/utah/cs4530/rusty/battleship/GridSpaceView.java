@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by Rusty on 10/24/2016.
  */
-public class GridSpaceView extends View implements View.OnClickListener{
+public class GridSpaceView extends View {
     int _gridSpaceColor = Color.BLUE;
     int _gridIndex;
     private boolean _enabled;
@@ -26,10 +26,6 @@ public class GridSpaceView extends View implements View.OnClickListener{
         super(context);
         _gridIndex = gridIndex;
         _enabled = true;
-    }
-
-    @Override
-    public void onClick(View view) {
     }
 
     public interface OnGridSpaceTouchedListener {

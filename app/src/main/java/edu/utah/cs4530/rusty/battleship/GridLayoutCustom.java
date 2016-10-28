@@ -48,7 +48,7 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnGridS
             childRect.top = (childIndex / _gridSize) * childHeight;
             childRect.bottom = childRect.top + childHeight;
 
-            GridSpaceView childView = new GridSpaceView(getContext(), childIndex);
+            GridSpaceView childView;
             childView = (GridSpaceView) getChildAt(childIndex);
             childView.setOnGridSpaceTouchedListener(this);
             childView.setId(childIndex);
@@ -65,14 +65,4 @@ public class GridLayoutCustom extends ViewGroup implements GridSpaceView.OnGridS
         GridSpaceView gsv = (GridSpaceView) getChildAt(space);
         gsv.setColor(color);
     }
-
-    public void setGridSpaceColor(Set<Integer> allShips) {
-        for (Integer ship : allShips) {
-            GridSpaceView childView = (GridSpaceView) getChildAt(ship);
-            childView.setColor(Color.GRAY);
-        }
-    }
-
-
-
 }

@@ -44,14 +44,6 @@ public class GameObject implements Serializable {
 
     Random random = new Random();
 
-    //for the purpose of placing the ships and determining if they overlap
-    Set<Integer> _destroyer = new HashSet<>(); // size 2
-    Set<Integer> _submarine = new HashSet<>(); // size 3
-    Set<Integer> _cruiser = new HashSet<>(); // size 3
-    Set<Integer> _battleship = new HashSet<>(); // size 4
-    Set<Integer> _carrier = new HashSet<>(); // size 5
-
-
     /**
      * default constructor. Adds 5 ships to each player's ship map
      */
@@ -115,26 +107,6 @@ public class GameObject implements Serializable {
                 }
             }
         }
-        //TODO: decide if I really need this. I don't think I do (I'm using allShips instead)
-        switch (shipType) {
-            case CARRIER:
-                _carrier = tempSet;
-                break;
-            case BATTLESHIP:
-                _battleship = tempSet;
-                break;
-            case SUBMARINE:
-                _submarine = tempSet;
-                break;
-            case CRUISER:
-                _cruiser = tempSet;
-                break;
-            case DESTROYER:
-                _destroyer = tempSet;
-                break;
-            default:
-                break;
-        }
     }
 
     private boolean checkShipCollisions(int shipSize, String shipType, int nextShipPos, Boolean vertical, int player) {
@@ -145,14 +117,12 @@ public class GameObject implements Serializable {
                     placeShip(player, shipSize, shipType);
                     return true;
                 }
-
                 if (vertical) {
                     checkPositionTemp = checkPositionTemp - 10;
                 }
                 else {
                     checkPositionTemp = checkPositionTemp - 1;
                 }
-
             }
         return false;
     }
@@ -167,7 +137,6 @@ public class GameObject implements Serializable {
                 sp = random.nextInt(100);
             } while (sp % 10 < shipSize - 1);
         }
-
         return sp;
     }
 

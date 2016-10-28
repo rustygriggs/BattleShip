@@ -25,9 +25,7 @@ import java.util.Map;
  * Created by Rusty on 10/24/2016.
  */
 public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissileFiredListener {
-    public static String GAME_OBJECT_LIST_FILENAME = "game_object_list.dat";
-    List<GridSpaceView> _gridSpacesPlayer1 = new ArrayList<>();
-    List<GridSpaceView> _gridSpacesPlayer2 = new ArrayList<>();
+    public static String GAME_OBJECT_LIST_FILENAME = "Game_object_list.dat";
     private int _currentGameIndex = 0;
     GridLayoutCustom _ownGrid;
     GridLayoutCustom _opponentGrid;
@@ -48,7 +46,6 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
         LinearLayout rootLayout = new LinearLayout(getActivity());
         rootLayout.setOrientation(LinearLayout.VERTICAL);
 
-
         LinearLayout linearLayout = new LinearLayout(getActivity());
         View leftSideView = new View(getActivity());
         leftSideView.setBackgroundColor(Color.BLACK);
@@ -61,7 +58,6 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
         for (int i = 0; i < 100; i++) {
             GridSpaceView gridSpaceView = new GridSpaceView(getActivity());
             gridSpaceView.setEnabled(false);
-            _gridSpacesPlayer1.add(gridSpaceView);
             _ownGrid.addView(gridSpaceView);
 
         }
@@ -76,13 +72,11 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
         linearLayout.addView(rightSideView, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
 
-
         //opponent Grid starts
         _opponentGrid = new GridLayoutCustom(getActivity());
         _opponentGrid.setEnabled(true);
         for (int i = 0; i < 100; i++) {
             GridSpaceView gridSpaceView = new GridSpaceView(getActivity());
-            _gridSpacesPlayer2.add(gridSpaceView);
             _opponentGrid.addView(gridSpaceView);
         }
         _opponentGrid.setOnMissileFiredListener(this);
@@ -100,11 +94,10 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        GameObjectList.setInstance(loadFromFile(GAME_OBJECT_LIST_FILENAME));
-//        if (GameObjectList.getInstance().getGameObjectsCount() == 0) {
+        GameObjectList.setInstance(loadFromFile(GAME_OBJECT_LIST_FILENAME));
+        if (GameObjectList.getInstance().getGameObjectsCount() == 0) {
             GameObjectList.getInstance().createNewGame();
-       // }
-
+        }
     }
 
     @Override
@@ -116,8 +109,6 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
         showPlayerSwitch.putExtra("player_2_wins", GameObjectList.getInstance().readGame(_currentGameIndex)._player2Wins);
         showPlayerSwitch.putExtra("missileIndex", missileIndex);
         startActivityForResult(showPlayerSwitch, 0);
-
-
     }
 
     /**
@@ -164,7 +155,6 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
                 int missileIndex = data.getIntExtra("missileIndex", 0);
                 int hitCode = GameObjectList.getInstance().updateGame(_currentGameIndex, missileIndex);
 
-                //how bout instead return a List of numbers where a 0 is a miss, a 1 is a hit, then loop through and repaint all the spaces
                 updateViews();
             }
         }
