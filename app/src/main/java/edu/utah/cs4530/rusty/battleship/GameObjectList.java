@@ -16,6 +16,7 @@ public class GameObjectList extends Object implements Serializable {
     //Singleton class
     private static GameObjectList _instance;
 
+
     /**
      * Used to get the one instance of this class.
      * @return the single instance of Gallery that has been instantiated.

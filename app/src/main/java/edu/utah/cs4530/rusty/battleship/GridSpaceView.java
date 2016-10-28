@@ -13,9 +13,10 @@ import java.util.Set;
 /**
  * Created by Rusty on 10/24/2016.
  */
-public class GridSpaceView extends View {
+public class GridSpaceView extends View implements View.OnClickListener{
     int _gridSpaceColor = Color.BLUE;
     int _gridIndex;
+    private boolean _enabled;
 
     public GridSpaceView(Context context) {
         super(context);
@@ -24,6 +25,11 @@ public class GridSpaceView extends View {
     public GridSpaceView(Context context, int gridIndex) {
         super(context);
         _gridIndex = gridIndex;
+        _enabled = true;
+    }
+
+    @Override
+    public void onClick(View view) {
     }
 
     public interface OnGridSpaceTouchedListener {
@@ -60,10 +66,6 @@ public class GridSpaceView extends View {
         invalidate();
     }
 
-    public int getColor() {
-        return _gridSpaceColor;
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getActionMasked() == MotionEvent.ACTION_UP) {
@@ -72,5 +74,14 @@ public class GridSpaceView extends View {
         return true;
     }
 
+    public int getColor() {
+        return _gridSpaceColor;
+    }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        _enabled = enabled;
+    }
 }

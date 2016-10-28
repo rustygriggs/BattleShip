@@ -3,14 +3,17 @@ package edu.utah.cs4530.rusty.battleship;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GameListFragment.OnGameChosenListener{
 
     public static final String OPPONENT_GRID_FRAGMENT_TAG = "GridsFragment";
     public static final String GAME_LIST_FRAGMENT_TAG = "GameListFragment";
+    private GameListFragment _gameListFragment;
+    private GridsFragment _gridsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +40,38 @@ public class MainActivity extends AppCompatActivity {
                         0, ViewGroup.LayoutParams.MATCH_PARENT, 3));
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        GridsFragment gridsFragment = (GridsFragment)
+        _gridsFragment = (GridsFragment)
                 getSupportFragmentManager().findFragmentByTag(OPPONENT_GRID_FRAGMENT_TAG);
-        GameListFragment gameListFragment = (GameListFragment)
+        _gameListFragment = (GameListFragment)
                 getSupportFragmentManager().findFragmentByTag(GAME_LIST_FRAGMENT_TAG);
 
-        if (gridsFragment == null) {
-            gridsFragment = GridsFragment.newInstance();
-            gameListFragment = GameListFragment.newInstance();
-            transaction.add(opponentGrid.getId(), gridsFragment, OPPONENT_GRID_FRAGMENT_TAG);
-            transaction.add(gameListView.getId(), gameListFragment, GAME_LIST_FRAGMENT_TAG);
+
+        if (_gridsFragment == null) {
+            _gridsFragment = GridsFragment.newInstance();
+            _gameListFragment = GameListFragment.newInstance();
+            transaction.add(opponentGrid.getId(), _gridsFragment, OPPONENT_GRID_FRAGMENT_TAG);
+            transaction.add(gameListView.getId(), _gameListFragment, GAME_LIST_FRAGMENT_TAG);
         }
         else {
-            transaction.replace(opponentGrid.getId(), gridsFragment);
-            transaction.replace(gameListView.getId(), gameListFragment);
+            transaction.replace(opponentGrid.getId(), _gridsFragment);
+            transaction.replace(gameListView.getId(), _gameListFragment);
         }
+        _gameListFragment.setOnGameChosenListener(this);
+
         transaction.commit();
+    }
+
+    @Override
+    public void onGameChosen(int gameId) {
+        Log.i("Game selected", "" + gameId);
+
+        _gridsFragment.setCurrentGame(gameId);
+    }
+
+    @Override
+    public void onNewGame() {
+        Log.i("New Game", "New Game ");
+
+        _gridsFragment.addNewGame();
     }
 }

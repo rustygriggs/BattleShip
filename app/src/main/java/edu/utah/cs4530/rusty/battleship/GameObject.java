@@ -198,7 +198,7 @@ public class GameObject implements Serializable {
             _player1Guesses.add(index);
             _currentPlayer = 2;
             hitCode = HIT;
-            _player1State.put(index, 1);
+            _player2State.put(index, HIT);
             player1HitCount++;
             if (player1HitCount == 17) {
                 _player1Wins = true;
@@ -209,7 +209,7 @@ public class GameObject implements Serializable {
             _player1Guesses.add(index);
             _currentPlayer = 2;
             hitCode = MISS;
-            _player1State.put(index, 0);
+            _player2State.put(index, 0);
         }
         return hitCode;
     }
@@ -225,7 +225,7 @@ public class GameObject implements Serializable {
             _player2Guesses.add(index);
             _currentPlayer = 1;
             hitCode = HIT;
-            _player2State.put(index, 1);
+            _player1State.put(index, 1);
             player2HitCount++;
             if (player2HitCount == 17) {
                 _player2Wins = true;
@@ -236,7 +236,7 @@ public class GameObject implements Serializable {
             _player2Guesses.add(index);
             _currentPlayer = 1;
             hitCode = MISS;
-            _player2State.put(index, 0);
+            _player1State.put(index, 0);
         }
         return hitCode;
     }

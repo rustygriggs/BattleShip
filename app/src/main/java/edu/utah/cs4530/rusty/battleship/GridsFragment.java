@@ -32,8 +32,6 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
     GridLayoutCustom _ownGrid;
     GridLayoutCustom _opponentGrid;
 
-
-
     public static GridsFragment newInstance() {
         //this stuff was included when I just tabbed to write newInstance()
 //        Bundle args = new Bundle();
@@ -65,6 +63,7 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
             gridSpaceView.setEnabled(false);
             _gridSpacesPlayer1.add(gridSpaceView);
             _ownGrid.addView(gridSpaceView);
+
         }
         _ownGrid.setOnMissileFiredListener(this);
 
@@ -80,6 +79,7 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
 
         //opponent Grid starts
         _opponentGrid = new GridLayoutCustom(getActivity());
+        _opponentGrid.setEnabled(true);
         for (int i = 0; i < 100; i++) {
             GridSpaceView gridSpaceView = new GridSpaceView(getActivity());
             _gridSpacesPlayer2.add(gridSpaceView);
@@ -93,6 +93,7 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
         rootLayout.addView(_opponentGrid, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
 
+        updateViews();
         return rootLayout;
     }
 
@@ -164,63 +165,69 @@ public class GridsFragment extends Fragment implements GridLayoutCustom.OnMissil
                 int hitCode = GameObjectList.getInstance().updateGame(_currentGameIndex, missileIndex);
 
                 //how bout instead return a List of numbers where a 0 is a miss, a 1 is a hit, then loop through and repaint all the spaces
-                Map<Integer, Integer> player1State = GameObjectList.getInstance().readGame(_currentGameIndex)._player1State;
-                Map<Integer, Integer> player2State = GameObjectList.getInstance().readGame(_currentGameIndex)._player2State;
-
-                if (GameObjectList.getInstance().readGame(_currentGameIndex)._currentPlayer == 1) {
-                    for (Integer hitMissIndex : player1State.keySet()) {
-                        if (player1State.get(hitMissIndex) == 0) {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
-                        } else if (player1State.get(hitMissIndex) == 1) {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
-                        } else {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
-                        }
-                    }
-                    for (Integer hitMissIndex : player2State.keySet()) {
-                        if (player2State.get(hitMissIndex) == 0) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
-                        } else if (player2State.get(hitMissIndex) == 1) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
-                        }
-                        else if (player2State.get(hitMissIndex) == 2) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
-                        }
-                        else {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
-                        }
-                    }
-
-                } else {
-                    for (Integer hitMissIndex : player2State.keySet()) {
-                        if (player2State.get(hitMissIndex) == 0) {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
-
-                        } else if (player2State.get(hitMissIndex) == 1) {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
-
-                        } else {
-                            _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
-
-                        }
-                    }
-                    for (Integer hitMissIndex : player1State.keySet()) {
-                        if (player1State.get(hitMissIndex) == 0) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
-
-                        } else if (player1State.get(hitMissIndex) == 1) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
-                        }
-                        else if (player1State.get(hitMissIndex) == 2) {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
-                        }
-                        else {
-                            _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
-                        }
-                    }
-                }
-                saveToFile();
+                updateViews();
             }
         }
+    }
+
+    private void updateViews() {
+        Map<Integer, Integer> player1State = GameObjectList.getInstance().readGame(_currentGameIndex)._player1State;
+        Map<Integer, Integer> player2State = GameObjectList.getInstance().readGame(_currentGameIndex)._player2State;
+
+        if (GameObjectList.getInstance().readGame(_currentGameIndex)._currentPlayer == 1) {
+            for (Integer hitMissIndex : player2State.keySet()) {
+                if (player2State.get(hitMissIndex) == 0) {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+                } else if (player2State.get(hitMissIndex) == 1) {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
+                } else {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+                }
+            }
+            for (Integer hitMissIndex : player1State.keySet()) {
+                if (player1State.get(hitMissIndex) == 0) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+                } else if (player1State.get(hitMissIndex) == 1) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
+                } else if (player1State.get(hitMissIndex) == 2) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
+                } else {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+                }
+            }
+        } else {
+            for (Integer hitMissIndex : player1State.keySet()) {
+                if (player1State.get(hitMissIndex) == 0) {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+                } else if (player1State.get(hitMissIndex) == 1) {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.RED);
+                } else {
+                    _opponentGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+                }
+            }
+            for (Integer hitMissIndex : player2State.keySet()) {
+                if (player2State.get(hitMissIndex) == 0) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.WHITE);
+                } else if (player2State.get(hitMissIndex) == 1) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.RED);
+                } else if (player2State.get(hitMissIndex) == 2) {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.GRAY);
+                } else {
+                    _ownGrid.setSpaceColor(hitMissIndex, Color.BLUE);
+                }
+            }
+        }
+        saveToFile();
+    }
+
+    public void setCurrentGame(int gameId) {
+        _currentGameIndex = gameId;
+        updateViews();
+    }
+
+    public void addNewGame() {
+        GameObjectList.getInstance().createNewGame();
+        _currentGameIndex = GameObjectList.getInstance().getGameObjectsCount() - 1;
+        updateViews();
     }
 }
